@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>ProtoHuman.link 🏛️</title>
-  
+
   <!-- Minimalistic, Neo-Brutal CSS -->
   <style>
     :root {
@@ -12,7 +13,9 @@
       --text-color: #000000;
       --font-family: "Courier New", Courier, monospace;
     }
-    html, body {
+
+    html,
+    body {
       margin: 0;
       padding: 0;
       background: var(--background-color);
@@ -21,19 +24,25 @@
       font-size: 16px;
       line-height: 1.6;
     }
-    header, main, footer {
+
+    header,
+    main,
+    footer {
       width: 90%;
       max-width: 1200px;
       margin: 0 auto;
       padding: 1rem 0;
     }
+
     header h1 {
       font-size: 2rem;
       margin: 0.5rem 0;
     }
+
     .search-container {
       margin: 1rem 0;
     }
+
     .search-container input {
       width: 100%;
       padding: 0.5rem;
@@ -42,27 +51,32 @@
       background: var(--background-color);
       color: var(--text-color);
     }
+
     .categories {
       display: grid;
       grid-template-columns: 1fr;
       gap: 2rem;
       margin-bottom: 2rem;
     }
+
     @media (min-width: 768px) {
       .categories {
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
     section h2 {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
       text-decoration: underline;
     }
+
     ul {
       list-style: none;
       padding: 0;
       margin: 0;
     }
+
     li {
       position: relative;
       margin: 0.5rem 0;
@@ -71,9 +85,11 @@
       border-bottom: 1px dashed var(--text-color);
       width: fit-content;
     }
+
     li:hover {
       background: #eaeaea;
     }
+
     /* Hover Card Styles */
     .hover-card {
       display: none;
@@ -86,21 +102,26 @@
       padding: 0.5rem;
       z-index: 100;
     }
+
     li:hover .hover-card {
       display: block;
     }
+
     .hover-card h3 {
       margin-top: 0;
       margin-bottom: 0.25rem;
       font-size: 1.1rem;
     }
+
     .hover-card p {
       margin: 0.25rem 0;
     }
+
     footer p {
       font-size: 0.9rem;
       text-align: center;
     }
+
     .coffee-link {
       display: inline-block;
       text-decoration: none;
@@ -111,14 +132,23 @@
       margin: 0.5rem auto;
       transition: background 0.2s;
     }
+
     .coffee-link:hover {
       background: #000000;
       color: #ffffff;
     }
   </style>
 </head>
-<body>
 
+<body>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GNDF6DYYCN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-GNDF6DYYCN');
+  </script>
   <!-- Firebase App, Firestore, Analytics, and App Check Initialization -->
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -317,11 +347,7 @@
     <h1>ProtoHuman.link 🏛️</h1>
     <p>A minimalistic resource for protocols that nurture Mind, Body, and Spirit.</p>
     <div class="search-container">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search protocols (e.g. chronic back pain)"
-      />
+      <input type="text" id="searchInput" placeholder="Search protocols (e.g. chronic back pain)" />
     </div>
   </header>
 
@@ -361,4 +387,5 @@
   </footer>
 
 </body>
+
 </html>

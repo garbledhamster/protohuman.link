@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -140,26 +141,29 @@
 </head>
 
 <body>
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GNDF6DYYCN"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
+
     gtag('config', 'G-GNDF6DYYCN');
   </script>
-
   <!-- Firebase App, Firestore, Analytics, and App Check Initialization -->
   <script type="module">
-    // Import the functions you need from the SDKs
+    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
-    import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app-check.js";
+    import {
+      initializeAppCheck,
+      ReCaptchaV3Provider
+    } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app-check.js";
 
-    // Your Firebase config (replace with your actual project settings if needed)
+    // Your web app's Firebase configuration
+    // (Replace with your actual config from Project Settings)
     const firebaseConfig = {
-      apiKey: "AIzaSy...NytJDLwPP71U",
+      apiKey: "AIzaSyDamjUdLVEBIyjt-mTX1l7NytJDLwPP71U",
       authDomain: "protohuman-link.firebaseapp.com",
       projectId: "protohuman-link",
       storageBucket: "protohuman-link.firebasestorage.app",
@@ -174,8 +178,7 @@
     const db = getFirestore(app);
 
     // Initialize App Check with reCAPTCHA v3
-    // Replace the site key below with the one from your reCAPTCHA Admin Console
-    // Make sure this domain (protohuman.link) is registered in that site key’s settings.
+    // Replace "YOUR_RECAPTCHA_SITE_KEY" with the Site Key from your Firebase Console -> App Check
     const appCheck = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider("6Levv7QqAAAAAKLZSWTtrLSdhvh1O02FqmkkXdMZ"),
       isTokenAutoRefreshEnabled: true
@@ -201,21 +204,15 @@
 
     // Load protocols from Firestore
     async function loadProtocols() {
-      try {
-        for (const cat of categories) {
-          const snapshot = await getDocs(collection(db, cat));
-          snapshot.forEach(doc => {
-            // doc.id => e.g. "mental_reset"
-            // doc.data() => fields (title, description, sources, etc.)
-            allProtocols[cat][doc.id] = doc.data();
-          });
-        }
-        // Once all categories are loaded, render them
-        renderLists(allProtocols);
-
-      } catch (error) {
-        console.error("Error loading protocols:", error);
+      for (const cat of categories) {
+        const snapshot = await getDocs(collection(db, cat));
+        snapshot.forEach(doc => {
+          // doc.id (e.g. "mental_reset") -> doc.data() has fields (title, description, sources, etc.)
+          allProtocols[cat][doc.id] = doc.data();
+        });
       }
+      // Render everything once loaded
+      renderLists(allProtocols);
     }
 
     // Render each category in its UL
@@ -266,14 +263,13 @@
           if (typeof protocol.sources === 'string') {
             hoverSources.innerHTML = `Sources: <a href="${protocol.sources}" target="_blank">${protocol.sources}</a>`;
           } else if (Array.isArray(protocol.sources)) {
-            hoverSources.innerHTML = 'Sources: ' + protocol.sources
-              .map(src => `<a href="${src}" target="_blank">${src}</a>`)
-              .join(', ');
+            hoverSources.innerHTML =
+              'Sources: ' +
+              protocol.sources.map(src => `<a href="${src}" target="_blank">${src}</a>`).join(', ');
           }
           hoverCard.appendChild(hoverSources);
         }
 
-        // Attach hover card and list item
         li.appendChild(hoverCard);
         ulElement.appendChild(li);
       });
@@ -330,9 +326,8 @@
                 hoverSources.innerHTML = `Sources: <a href="${protocol.sources}" target="_blank">${protocol.sources}</a>`;
               } else if (Array.isArray(protocol.sources)) {
                 hoverSources.innerHTML =
-                  'Sources: ' + protocol.sources
-                    .map(src => `<a href="${src}" target="_blank">${src}</a>`)
-                    .join(', ');
+                  'Sources: ' +
+                  protocol.sources.map(src => `<a href="${src}" target="_blank">${src}</a>`).join(', ');
               }
               hoverCard.appendChild(hoverSources);
             }
@@ -352,11 +347,7 @@
     <h1>ProtoHuman.link 🏛️</h1>
     <p>A minimalistic resource for protocols that nurture Mind, Body, and Spirit.</p>
     <div class="search-container">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search protocols (e.g. chronic back pain)"
-      />
+      <input type="text" id="searchInput" placeholder="Search protocols (e.g. chronic back pain)" />
     </div>
   </header>
 
@@ -390,11 +381,11 @@
 
   <footer>
     <p>
-      <a class="coffee-link" href="https://www.garbledhamster.com" target="_blank">
-        Buy Me a Coffee ☕️
-      </a>
+      <a class="coffee-link" href="https://www.garbledhamster.com" target="_blank">Buy Me a Coffee ☕️</a>
     </p>
     <p>© 2025 ProtoHuman.link | Minimalistic. Empowering. Connected.</p>
   </footer>
+
 </body>
+
 </html>

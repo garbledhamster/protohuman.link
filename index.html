@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProtoHuman.link 🏛️</title>
+  
+  <!-- Minimalistic, Neo-Brutal CSS -->
+  <style>
+    :root {
+      --background-color: #ffffff;
+      --text-color: #000000;
+      --font-family: "Courier New", Courier, monospace;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
+      color: var(--text-color);
+      font-family: var(--font-family);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    header, main, footer {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 0;
+    }
+    header h1 {
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+    .search-container {
+      margin: 1rem 0;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 2px solid var(--text-color);
+      background: var(--background-color);
+      color: var(--text-color);
+    }
+    .categories {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: 768px) {
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-decoration: underline;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      position: relative;
+      margin: 0.5rem 0;
+      padding: 0.25rem 0;
+      cursor: pointer;
+      border-bottom: 1px dashed var(--text-color);
+      width: fit-content;
+    }
+    li:hover {
+      background: #eaeaea;
+    }
+    /* Hover Card Styles */
+    .hover-card {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 2rem;
+      max-width: 300px;
+      background: var(--background-color);
+      border: 2px solid var(--text-color);
+      padding: 0.5rem;
+      z-index: 100;
+    }
+    li:hover .hover-card {
+      display: block;
+    }
+    .hover-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+      font-size: 1.1rem;
+    }
+    .hover-card p {
+      margin: 0.25rem 0;
+    }
+    footer p {
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .coffee-link {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: bold;
+      border: 2px solid var(--text-color);
+      padding: 0.3rem 0.6rem;
+      margin: 0.5rem auto;
+      transition: background 0.2s;
+    }
+    .coffee-link:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Firebase scripts (Replace versions with your chosen stable versions) -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-database.js"></script>
+
+  <!-- Replace the config object below with your actual Firebase project config -->
+  <script>
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <header>
+    <h1>ProtoHuman.link 🏛️</h1>
+    <p>A minimalistic resource for protocols that nurture Mind, Body, and Spirit.</p>
+    <div class="search-container">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search protocols (e.g. chronic back pain)" 
+      />
+    </div>
+  </header>
+
+  <main>
+    <div class="categories" id="categoriesContainer">
+      <!-- MIND 🧠 -->
+      <section id="mind">
+        <h2>Mind 🧠</h2>
+        <ul id="mindList"></ul>
+      </section>
+
+      <!-- BODY 💪 -->
+      <section id="body">
+        <h2>Body 💪</h2>
+        <ul id="bodyList"></ul>
+      </section>
+
+      <!-- SPIRIT 🌌 -->
+      <section id="spirit">
+        <h2>Spirit 🌌</h2>
+        <ul id="spiritList"></ul>
+      </section>
+
+      <!-- LIFE 🌱 -->
+      <section id="life">
+        <h2>Life 🌱</h2>
+        <ul id="lifeList"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      <a class="coffee-link" href="https://www.garbledhamster.com" target="_blank">Buy Me a Coffee ☕️</a>
+    </p>
+    <p>© 2025 ProtoHuman.link | Minimalistic. Empowering. Connected.</p>
+  </footer>
+
+  <!-- Main Script -->
+  <script>
+    // Fetch protocols from Firebase and render them
+    const database = firebase.database();
+    const protocolsRef = database.ref('protocols');
+
+    // DOM elements
+    const mindList = document.getElementById('mindList');
+    const bodyList = document.getElementById('bodyList');
+    const spiritList = document.getElementById('spiritList');
+    const lifeList = document.getElementById('lifeList');
+    const searchInput = document.getElementById('searchInput');
+
+    let allProtocols = {
+      mind: {},
+      body: {},
+      spirit: {},
+      life: {}
+    };
+
+    // On value change, fetch the protocols
+    protocolsRef.on('value', (snapshot) => {
+      allProtocols = snapshot.val() || {};
+      renderLists(allProtocols);
+    });
+
+    // Render protocol lists
+    function renderLists(protocols) {
+      renderCategory(protocols.mind, mindList);
+      renderCategory(protocols.body, bodyList);
+      renderCategory(protocols.spirit, spiritList);
+      renderCategory(protocols.life, lifeList);
+    }
+
+    // Helper to render each category
+    function renderCategory(categoryObj, ulElement) {
+      if (!categoryObj) return;
+      ulElement.innerHTML = '';
+      Object.keys(categoryObj).forEach(protocolKey => {
+        const protocol = categoryObj[protocolKey];
+        // Create list item
+        const li = document.createElement('li');
+        li.textContent = protocol.title;
+
+        // Hover card
+        const hoverCard = document.createElement('div');
+        hoverCard.classList.add('hover-card');
+
+        const hoverTitle = document.createElement('h3');
+        hoverTitle.textContent = protocol.title;
+        hoverCard.appendChild(hoverTitle);
+
+        const hoverDesc = document.createElement('p');
+        hoverDesc.textContent = protocol.description;
+        hoverCard.appendChild(hoverDesc);
+
+        // Sources
+        if (protocol.sources && protocol.sources.length > 0) {
+          const hoverSources = document.createElement('p');
+          hoverSources.innerHTML = 
+            'Sources: ' + protocol.sources.map(src => `<a href="${src}" target="_blank">${src}</a>`).join(', ');
+          hoverCard.appendChild(hoverSources);
+        }
+
+        li.appendChild(hoverCard);
+        ulElement.appendChild(li);
+      });
+    }
+
+    // Simple "confidence-based" search (demo):
+    // We are matching if the query string is found in protocol title or description
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      // For each category, filter protocols
+      ['mind', 'body', 'spirit', 'life'].forEach(cat => {
+        const categoryObj = allProtocols[cat] || {};
+        const ulElement = document.getElementById(cat + 'List');
+        ulElement.innerHTML = '';
+        Object.keys(categoryObj).forEach(key => {
+          const protocol = categoryObj[key];
+          const combinedText = (protocol.title + protocol.description).toLowerCase();
+          if (combinedText.includes(query) || query === '') {
+            // Show only those that match
+            const li = document.createElement('li');
+            li.textContent = protocol.title;
+
+            // Hover card
+            const hoverCard = document.createElement('div');
+            hoverCard.classList.add('hover-card');
+
+            const hoverTitle = document.createElement('h3');
+            hoverTitle.textContent = protocol.title;
+            hoverCard.appendChild(hoverTitle);
+
+            const hoverDesc = document.createElement('p');
+            hoverDesc.textContent = protocol.description;
+            hoverCard.appendChild(hoverDesc);
+
+            // Sources
+            if (protocol.sources && protocol.sources.length > 0) {
+              const hoverSources = document.createElement('p');
+              hoverSources.innerHTML =
+                'Sources: ' + protocol.sources.map(src => `<a href="${src}" target="_blank">${src}</a>`).join(', ');
+              hoverCard.appendChild(hoverSources);
+            }
+
+            li.appendChild(hoverCard);
+            ulElement.appendChild(li);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
